@@ -1,0 +1,23 @@
+body {
+  background: linear-gradient(120deg, #f5c1d1, #d3a8ed, #9fa5e3, #a1b6ff);
+  background-size: 400% 400%;
+  animation: bg_gradient 15s ease infinite;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(120deg, #2d1f5d, #4e2971, #8b46a7, #a8457f);
+    background-size: 400% 400%;
+    animation: bg_gradient 15s ease infinite;
+  }
+}
+@keyframes bg_gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

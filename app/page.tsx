@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import BookForm from "./bookForm.module";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
+import "./homePageBG.css";
 
 export const metadata: Metadata = {
   title: "BookLink",
