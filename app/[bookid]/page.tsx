@@ -10,7 +10,11 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
     <main className="grid grid-cols-1 md:grid-cols-2 min-h-screen p-8 md:p-20 gap-4">
       <div className="flex flex-col gap-2">
         <h1 className="font-semibold text-2xl text-center">Book Info</h1>
-        <p>ID: {bookID}</p>
+        <p>Name: Coming Soon</p>
+        {/* Put an <Image> here once I get book covers working */}
+        <p>Description: Coming Soon</p>
+        <p className="text-slate-500">ISBN: Coming Soon</p>
+        <p className="text-slate-500">Book ID (from URL): {bookID}</p>
       </div>
       <div className="flex flex-col gap-2 text-xl">
         <a href={`https://www.google.com/search?q=${bookID}`} className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Temp button</a>
