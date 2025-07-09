@@ -1,4 +1,4 @@
-# Book Share
+# Book Link
 An aesthetically-pleasing tool for ethically linking to books.
 ## The Problem
 I saw this interesting viewpoint from [Richard Stallman's website](https://stallman.org/amazon.html):
