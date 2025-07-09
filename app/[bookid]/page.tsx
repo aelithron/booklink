@@ -1,3 +1,9 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "View Book",
+}
+
 export default async function Page({ params }: { params: Promise<{ bookid: string }> }) {
   const bookID = (await params).bookid;
   return (
@@ -7,7 +13,7 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
         <p>ID: {bookID}</p>
       </div>
       <div className="flex flex-col gap-2 text-xl">
-        <a href="google.com" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Temp button</a>
+        <a href={`https://www.google.com/search?q=${bookID}`} className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Temp button</a>
       </div>
     </main>
   );
