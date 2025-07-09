@@ -1,9 +1,11 @@
 export type Book = {
   isbn: number,
   name: string,
+  cover: string | null,
   links: {
-    bookshopOrg: string,
-    barnesAndNoble: string,
-    amazon: string,
+    bookshopOrg: LinkToBook,
+    barnesAndNoble: LinkToBook,
+    amazon: LinkToBook,
   }
 }
+type LinkToBook = string | null;
