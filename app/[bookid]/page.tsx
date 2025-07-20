@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ bookid: string }> }) {
   const bookID = (await params).bookid;
   const rawResponse = await fetch(`https://www.googleapis.com/books/v1/volumes/${bookID}?key=${process.env.GOOGLE_BOOKS_KEY}`);
-  if (!rawResponse.status.toString().startsWith('2')) {
+  if (!rawResponse.ok) {
     return (
       <div className="flex flex-col p-8 md:p-20 items-center gap-2">
         <h1 className="text-3xl font-semibold">Not Found</h1>
