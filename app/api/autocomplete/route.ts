@@ -7,9 +7,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!body.search || (body.search as string).trim().length < 1) return NextResponse.json({ error: "missing_search", message: "Missing or invalid search!" }, { status: 400 });
   const rawAPIRequest = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${body.search.replaceAll(" ", "+")}&key=${process.env.GOOGLE_BOOKS_KEY}&fields=kind,items(id,kind,volumeInfo/title,volumeInfo/authors,volumeInfo/imageLinks)`);
   if (!rawAPIRequest) return NextResponse.json({ error: "server_fetch_error", message: "Couldn't contact the Google Books API!" }, { status: 500 });
-  const apireq = await rawAPIRequest.json();
+  const apires = await rawAPIRequest.json();
   const currentBookData: AutoCompletedBook[] = [];
-  for (const item of apireq.items) {
+  for (const item of apires.items) {
     if (item.kind !== "books#volume") continue;
     let cover;
     if (item.volumeInfo.imageLinks) {
@@ -27,9 +27,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (item.volumeInfo.authors) {
       const authorArray = (item.volumeInfo.authors as string[]);
       authors = authorArray.join(', ');
-    } else {
-      authors = "Author Unknown";
-    }
+    } else authors = "Author Unknown";
     currentBookData.push({ id: item.id, cover, title: item.volumeInfo.title, author: authors });
   }
   return NextResponse.json(currentBookData);
