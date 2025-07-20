@@ -33,13 +33,14 @@ function AutocompleteForm({ bookSearch }: { bookSearch: string }): ReactNode {
         setBookData(jsonRes);
       })
   }, [bookSearch]);
-  if (!bookSearch || bookSearch === "" || !bookData) return null;
+  if (!bookSearch || bookSearch === "") return null;
+  if (!bookData || bookData.length < 1) return <p className="flex flex-col p-2 bg-slate-500 border-2 mt-4 rounded-xl border-slate-700">Loading...</p>
   return (
     <div className="flex flex-col p-2 bg-slate-500 border-2 mt-4 rounded-xl border-slate-700">
-      {bookData.map((book) => <div key={book.id} className="grid grid-cols-5 p-1 items-center">
+      {bookData.map((book) => <div key={book.id} className="grid grid-cols-5 p-1 items-center w-[50vw]">
         <img src={book.cover} width={60} height={200} />
         <div className="col-span-4 flex flex-col">
-          <h2 className="text-lg">{book.title}</h2>
+          <h2 className="text-lg">{truncateTitle(book.title)}</h2>
           <h3>{book.author}</h3>
         </div>
       </div>)}
@@ -51,4 +52,9 @@ export type AutoCompletedBook = {
   cover: string,
   title: string,
   author: string
+}
+export function truncateTitle(text: string): string {
+  const maxLength = 35;
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + '...';
 }
