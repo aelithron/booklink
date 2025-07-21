@@ -7,11 +7,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const rawAPIRequest = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.GOOGLE_BOOKS_KEY}&fields=kind,volumeInfo/imageLinks`);
   if (!rawAPIRequest || !rawAPIRequest.ok) return new NextResponse(placeholderCover, { status: 500 });
   const book = await rawAPIRequest.json();
-  if (book.kind !== "books#volume") return new NextResponse(placeholderCover, { status: 400 });
   const coverURL = getCoverURL(book.volumeInfo.imageLinks);
   let cover;
   if (coverURL) {
-    cover = (await fetch(coverURL)).body
+    cover = (await fetch(coverURL)).body;
   } else {
     cover = placeholderCover;
   }
@@ -22,7 +21,7 @@ function getCoverURL(allCoverLinks: CoverLinks): string | null {
   let cover: string | null;
   switch (true) {
     /*
-      // Extra large and large are just excess data
+      // Extra large and large are just excessively big since I scale images down
       // I left them here just in case I want them later, though :3 - nova
       case !!allCoverLinks.extraLarge:
         cover = allCoverLinks.extraLarge;

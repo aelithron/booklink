@@ -1,0 +1,33 @@
+.bodyBG {
+  background: linear-gradient(120deg, 
+    var(--gradient-color1), 
+    var(--gradient-color2), 
+    var(--gradient-color3), 
+    var(--gradient-color4)
+  );
+  background-size: 400% 400%;
+  animation: bg_gradient 15s ease infinite;
+  --gradient-color1: #f5c1d1;
+  --gradient-color2: #d3a8ed;
+  --gradient-color3: #9fa5e3;
+  --gradient-color4: #a1b6ff;
+}
+@media (prefers-color-scheme: dark) {
+  .bodyBG {
+  --gradient-color1: #2d1f5d;
+  --gradient-color2: #4e2971;
+  --gradient-color3: #8b46a7;
+  --gradient-color4: #a8457f;
+  }
+}
+@keyframes bg_gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

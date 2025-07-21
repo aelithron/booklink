@@ -5,6 +5,7 @@ import Link from "next/link";
 import db from "@/db/db";
 import { bookTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import fancyBG from "../fancyBG.module.css"
 
 export const metadata: Metadata = {
   title: "View Book",
@@ -26,7 +27,7 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
   }
   const book = bookData[0];
   return (
-    <main className="grid grid-cols-1 md:grid-cols-2 min-h-screen p-8 md:p-20 gap-4">
+    <main className={`grid grid-cols-1 md:grid-cols-2 min-h-screen p-8 md:p-20 gap-4 ${fancyBG.bodyBG}`}>
       <div className="flex flex-col gap-2 items-center text-center">
         <h1 className="font-semibold text-2xl">Book Info</h1>
         <img alt="Book cover" src={`/api/imageproxy?id=${book.googleBooksID}`} width={400} height={640} />
@@ -34,21 +35,22 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
         <p>Description: Coming Soon</p>
         <p className="text-slate-500">ISBN: {book.isbn}</p>
       </div>
-      <div className="flex flex-col gap-2 text-xl">
+      <div className="flex flex-col gap-4 text-xl">
         {book.isbn ?
-          <a href={`https://bookshop.org/book/${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl font-semibold"><FontAwesomeIcon icon={faStar} /> Open on Bookshop.org</a> :
+          <a href={`https://bookshop.org/book/${book.isbn}`} target="_blank" className="bg-gradient-to-br from-violet-400 to-blue-400 dark:from-violet-600 dark:to-blue-600 border-slate-300 dark:border-slate-700 border-2 text-center p-2 rounded-2xl font-semibold"><FontAwesomeIcon icon={faStar} /> Open on Bookshop.org</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Bookshop.org</p>
         }
-        <hr className="h-px my-2 bg-slate-300 border-0 dark:bg-slate-700" />
+        <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
         {book.isbn ?
-          <a href={`https://www.barnesandnoble.com/w/a/a?ean=${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
+          <a href={`https://www.barnesandnoble.com/w/isbn?ean=${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available at Barnes & Noble</p>
         }
-        <hr className="h-px my-2 bg-slate-300 border-0 dark:bg-slate-700" />
+        <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
         {book.googleBooksID ?
           <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Google Books</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Google Books</p>
         }
+        <a href={book.isbn ? `https://www.amazon.com/s?k=${book.isbn}&i=stripbooks` : `https://www.amazon.com/s?k=${book.name}&i=stripbooks`} target="_blank" className="bg-slate-500 dark:bg-slate-700 border-slate-400 dark:border-slate-900 border-2 text-center p-2 rounded-2xl">Open on Amazon</a>
       </div>
     </main>
   );

@@ -10,8 +10,8 @@ config.autoAddCss = false
 const nunito = Nunito({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: {
-    template: '%s | Book Link',
-    default: 'Book Link'
+    template: '%s | BookLink',
+    default: 'BookLink'
   },
   description: "An aesthetically pleasing, ethical way to link to books.",
 };

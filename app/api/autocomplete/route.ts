@@ -9,6 +9,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!rawAPIRequest) return NextResponse.json({ error: "server_fetch_error", message: "Couldn't contact the Google Books API!" }, { status: 500 });
   const apires = await rawAPIRequest.json();
   const currentBookData: AutoCompletedBook[] = [];
+  if (!apires || !apires.items) return NextResponse.json([]);
   for (const item of apires.items) {
     if (item.kind !== "books#volume") continue;
     let cover;
