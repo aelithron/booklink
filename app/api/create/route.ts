@@ -25,60 +25,21 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!rawAPIRequest || !rawAPIRequest.status.toString().startsWith('2')) return NextResponse.json({ error: "server_fetch_error", message: "Couldn't contact the Google Books API!" }, { status: 500 });
   const book = await rawAPIRequest.json();
   if (book.kind !== "books#volume") return NextResponse.json({ error: "invalid_book", message: "Provided id was for a non-volume resource!" }, { status: 400 });
-  const cover = getCoverURL(book.volumeInfo.imageLinks);
   let authors: string;
   if (book.volumeInfo.authors) {
     const authorArray = (book.volumeInfo.authors as string[]);
     authors = authorArray.join(', ');
   } else authors = "Author Unknown";
   const isbns = parseISBNs(book.volumeInfo.industryIdentifiers);
-  const bookshopID = await bookshopOrgIDFromEAN(isbns.isbn13);
   await db.insert(bookTable).values({
-    cover: cover,
     name: book.volumeInfo.title,
     googleBooksID: body.id,
     author: authors,
-    isbn: isbns.isbn13,
-    bookshopOrgID: bookshopID
+    isbn: isbns.isbn13
   }).execute();
   return NextResponse.json({ id: (await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1))[0].id });
 }
 
-function getCoverURL(allCoverLinks: CoverLinks) {
-  let cover: string;
-  switch (true) {
-    case !!allCoverLinks?.extraLarge:
-      cover = allCoverLinks.extraLarge;
-      break;
-    case !!allCoverLinks?.large:
-      cover = allCoverLinks.large;
-      break;
-    case !!allCoverLinks?.medium:
-      cover = allCoverLinks.medium;
-      break;
-    case !!allCoverLinks?.small:
-      cover = allCoverLinks.small;
-      break;
-    case !!allCoverLinks?.thumbnail:
-      cover = allCoverLinks.thumbnail;
-      break;
-    case !!allCoverLinks?.smallThumbnail:
-      cover = allCoverLinks.smallThumbnail;
-      break;
-    default:
-      cover = "https://bookstoreromanceday.org/wp-content/uploads/2020/08/book-cover-placeholder.png";
-      break;
-  }
-  return cover;
-}
-type CoverLinks = {
-  extraLarge: string | undefined
-  large: string | undefined
-  medium: string | undefined
-  small: string | undefined
-  thumbnail: string | undefined
-  smallThumbnail: string | undefined
-}
 function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string}> | undefined) {
   if (!industryIdentifiers || industryIdentifiers.length === 0) {
     return { isbn10: null, isbn13: null };
@@ -95,14 +56,4 @@ function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string
     }
   }
   return result;
-}
-
-async function bookshopOrgIDFromEAN(ean: string | null): Promise<string | null> {
-  if (!ean) return null;
-  const bookshopRes = await fetch(`https://bookshop.org/p/books/a/a?ean=${ean}&next=t&`);
-  const resStatus = bookshopRes.status.toString();
-  if (!bookshopRes || (!resStatus.startsWith('2') && !resStatus.startsWith('3'))) return null;
-  const bookshopID = ((bookshopRes.url.split("https://bookshop.org/p/books/")[1]).split("/")[1]).split("?")[0];
-  if (bookshopID.length > 8) return null;
-  return bookshopID;
 }
