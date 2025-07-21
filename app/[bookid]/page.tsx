@@ -36,11 +36,11 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
       </div>
       <div className="flex flex-col gap-2 text-xl">
         {book.bookShopOrgID ?
-          <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Bookshop.org</a> :
+          <a href={`https://bookshop.org/p/books/a/${book.bookShopOrgID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Bookshop.org</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Bookshop.org</p>
         }
         {book.barnesAndNobleID ?
-          <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
+          <a href={`https://www.barnesandnoble.com/w/${book.barnesAndNobleID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available at Barnes & Noble</p>
         }
         {book.googleBooksID ?

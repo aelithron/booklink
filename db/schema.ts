@@ -6,7 +6,7 @@ export const bookTable = pgTable("books", {
   cover: text().notNull(),
   name: text().notNull(),
   author: text().notNull(),
-  isbn: integer().notNull(),
+  isbn: varchar({ length: 13 }),
   googleBooksID: text(),
   bookShopOrgID: integer(),
   barnesAndNobleID: integer(),

@@ -31,12 +31,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const authorArray = (book.volumeInfo.authors as string[]);
     authors = authorArray.join(', ');
   } else authors = "Author Unknown";
+  const isbns = parseISBNs(book.volumeInfo.industryIdentifiers);
   await db.insert(bookTable).values({
     cover: cover,
     name: book.volumeInfo.title,
     googleBooksID: body.id,
     author: authors,
-    isbn: book.volumeInfo.industryIdentifiers[0]?.identifier || null
+    isbn: isbns.isbn13,
+    amazonASIN: isbns.isbn10
   }).execute();
   return NextResponse.json({ id: (await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1))[0].id });
 }
@@ -75,4 +77,27 @@ type CoverLinks = {
   small: string | undefined
   thumbnail: string | undefined
   smallThumbnail: string | undefined
+}
+function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string}> | undefined) {
+  if (!industryIdentifiers || industryIdentifiers.length === 0) {
+    return { isbn10: null, isbn13: null };
+  }
+  const result = {
+    isbn10: null as string | null,
+    isbn13: null as string | null
+  };
+  for (const item of industryIdentifiers) {
+    if (item.type === "ISBN_10") {
+      result.isbn10 = item.identifier;
+    } else if (item.type === "ISBN_13") {
+      result.isbn13 = item.identifier;
+    }
+  }
+  return result;
+}
+async function getBookshopOrgID(isbn13: string) {
+  
+}
+async function getBarnesAndNobleID(isbn13: string) {
+  
 }
