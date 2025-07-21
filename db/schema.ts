@@ -8,7 +8,5 @@ export const bookTable = pgTable("books", {
   author: text().notNull(),
   isbn: varchar({ length: 13 }),
   googleBooksID: text(),
-  bookShopOrgID: integer(),
-  barnesAndNobleID: integer(),
   amazonASIN: varchar({ length: 10 })
 });

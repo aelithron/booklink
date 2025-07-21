@@ -95,9 +95,3 @@ function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string
   }
   return result;
 }
-async function getBookshopOrgID(isbn13: string) {
-  
-}
-async function getBarnesAndNobleID(isbn13: string) {
-  
-}

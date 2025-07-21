@@ -35,12 +35,12 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
         <p className="text-slate-500">ISBN: {book.isbn}</p>
       </div>
       <div className="flex flex-col gap-2 text-xl">
-        {book.bookShopOrgID ?
-          <a href={`https://bookshop.org/p/books/a/${book.bookShopOrgID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Bookshop.org</a> :
+        {book.isbn ?
+          <a href={`https://bookshop.org/p/books/a/a?ean=${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Bookshop.org</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Bookshop.org</p>
         }
-        {book.barnesAndNobleID ?
-          <a href={`https://www.barnesandnoble.com/w/${book.barnesAndNobleID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
+        {book.isbn ?
+          <a href={`https://www.barnesandnoble.com/w/a/a?ean=${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available at Barnes & Noble</p>
         }
         {book.googleBooksID ?
