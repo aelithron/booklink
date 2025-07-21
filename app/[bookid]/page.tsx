@@ -35,8 +35,8 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
         <p className="text-slate-500">ISBN: {book.isbn}</p>
       </div>
       <div className="flex flex-col gap-2 text-xl">
-        {book.isbn ?
-          <a href={`https://bookshop.org/p/books/a/a?ean=${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Bookshop.org</a> :
+        {book.bookshopOrgID ?
+          <a href={`https://bookshop.org/p/books/a/${book.bookshopOrgID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Bookshop.org</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Bookshop.org</p>
         }
         {book.isbn ?
@@ -46,10 +46,6 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
         {book.googleBooksID ?
           <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Google Books</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Google Books</p>
-        }
-        {book.amazonASIN ?
-          <a href={`https://amazon.com/dp/${book.amazonASIN}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Amazon</a> :
-          <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Amazon</p>
         }
       </div>
     </main>

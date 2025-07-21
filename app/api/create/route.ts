@@ -32,13 +32,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     authors = authorArray.join(', ');
   } else authors = "Author Unknown";
   const isbns = parseISBNs(book.volumeInfo.industryIdentifiers);
+  const bookshopID = await bookshopOrgIDFromEAN(isbns.isbn13);
   await db.insert(bookTable).values({
     cover: cover,
     name: book.volumeInfo.title,
     googleBooksID: body.id,
     author: authors,
     isbn: isbns.isbn13,
-    amazonASIN: isbns.isbn10
+    bookshopOrgID: bookshopID
   }).execute();
   return NextResponse.json({ id: (await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1))[0].id });
 }
@@ -94,4 +95,14 @@ function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string
     }
   }
   return result;
+}
+
+async function bookshopOrgIDFromEAN(ean: string | null): Promise<string | null> {
+  if (!ean) return null;
+  const bookshopRes = await fetch(`https://bookshop.org/p/books/a/a?ean=${ean}&next=t&`);
+  const resStatus = bookshopRes.status.toString();
+  if (!bookshopRes || (!resStatus.startsWith('2') && !resStatus.startsWith('3'))) return null;
+  const bookshopID = ((bookshopRes.url.split("https://bookshop.org/p/books/")[1]).split("/")[1]).split("?")[0];
+  if (bookshopID.length > 8) return null;
+  return bookshopID;
 }
