@@ -13,6 +13,7 @@ export default function BookForm() {
         <FontAwesomeIcon icon={faMagnifyingGlass} />
         <input value={book} onChange={(e) => setBook(e.target.value)} placeholder="Search..." className="bg-slate-500 border-2 border-slate-700 rounded-lg px-2 py-1" />
       </div>
+      <p className="dark:text-slate-400 text-slate-700 text-sm pt-1">(powered by Google Books)</p>
       <AutocompleteForm bookSearch={book} />
     </div>
   );

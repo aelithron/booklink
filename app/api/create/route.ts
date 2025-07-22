@@ -31,11 +31,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     authors = authorArray.join(', ');
   } else authors = "Author Unknown";
   const isbns = parseISBNs(book.volumeInfo.industryIdentifiers);
+  const openLibraryID = await getOpenLibraryID(isbns.isbn13);
   await db.insert(bookTable).values({
     name: book.volumeInfo.title,
     googleBooksID: body.id,
     author: authors,
-    isbn: isbns.isbn13
+    isbn: isbns.isbn13,
+    openLibraryID: openLibraryID
   }).execute();
   return NextResponse.json({ id: (await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1))[0].id });
 }
@@ -56,4 +58,12 @@ function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string
     }
   }
   return result;
+}
+async function getOpenLibraryID(isbn: string | null): Promise<string | null> {
+  if (!isbn) return null;
+  const rawReq = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+  if (!rawReq) return null;
+  const body = await rawReq.json();
+  if (!body || !body[`ISBN:${isbn}`]) return null;
+  return ((body[`ISBN:${isbn}`])["identifiers"])["openlibrary"][0] || null;
 }

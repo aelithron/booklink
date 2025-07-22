@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import fancyBG from "../fancyBG.module.css"
 import Image from "next/image";
 import { cache } from "react";
- 
+
 export async function generateMetadata({ params }: { params: Promise<{ bookid: string }> }): Promise<Metadata> {
   const bookData = await loadBook((await params).bookid);
   if (bookData.length === 0) return { title: "View Book" }
@@ -52,12 +52,13 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
     <main className={`grid grid-cols-1 md:grid-cols-2 min-h-screen p-8 md:p-20 gap-4 ${fancyBG.bodyBG}`}>
       <div className="flex flex-col gap-2 items-center text-center">
         <h1 className="font-semibold text-2xl">Book Info</h1>
-        <Image alt="Book cover" src={`/api/imageproxy?id=${book.googleBooksID}`} width={400} height={640} />
-        <p className="font-semibold text-xl">{book.name}</p>
-        <p>Description: Coming Soon</p>
-        <p className="text-slate-500">ISBN: {book.isbn}</p>
+        <Image alt="Book cover" src={`/api/imageproxy?id=${book.googleBooksID}`} className="rounded-lg" width={460} height={640} />
       </div>
       <div className="flex flex-col gap-4 text-xl">
+        <div className="text-center items-center">
+          <p className="font-semibold text-2xl">{book.name}</p>
+          <p>Description: Coming Soon</p>
+        </div>
         <h3 className="text-lg font-semibold">Bookstores</h3>
         {book.isbn ?
           <a href={`https://bookshop.org/book/${book.isbn}`} target="_blank" className="bg-gradient-to-br from-violet-400 to-blue-400 dark:from-violet-600 dark:to-blue-600 border-slate-300 dark:border-slate-700 border-2 text-center p-2 rounded-2xl font-semibold"><FontAwesomeIcon icon={faStar} /> Open on Bookshop.org</a> :
@@ -69,22 +70,23 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
         }
         <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
         <h3 className="text-lg font-semibold">Libraries</h3>
-        {book.isbn ?
-          <a href={`https://openlibrary.org/isbn/${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on the Open Library</a> :
+        {book.openLibraryID ?
+          <a href={`https://openlibrary.org/books/${book.openLibraryID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on the Open Library</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Open Library</p>
         }
         <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
         <h3 className="text-lg font-semibold">Big Companies :(</h3>
         {book.googleBooksID ?
-          <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Google Books</a> :
+          <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-gray-500 border-gray-700 dark:text-gray-300 text-gray-700 border-2 text-center p-2 rounded-2xl">Open on Google Books</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Google Books</p>
         }
-        <a href={book.isbn ? `https://www.amazon.com/s?k=${book.isbn}&i=stripbooks` : `https://www.amazon.com/s?k=${book.name}&i=stripbooks`} target="_blank" className="bg-slate-500 dark:bg-slate-700 border-slate-400 dark:border-slate-900 border-2 text-center p-2 rounded-2xl">Open on Amazon</a>
+        <a href={book.isbn ? `https://www.amazon.com/s?k=${book.isbn}&i=stripbooks` : `https://www.amazon.com/s?k=${book.name}&i=stripbooks`} target="_blank" className="bg-gray-500 border-gray-700 dark:text-gray-300 text-gray-700 border-2 text-center p-2 rounded-2xl">Open on Amazon</a>
+        <p className="text-slate-800 dark:text-slate-400 mt-4 text-center text-sm">ISBN: {book.isbn}</p>
       </div>
     </main>
   );
 }
 
 const loadBook = cache(async (bookID: string) => {
-  return await db.select().from(bookTable).where(eq(bookTable.id, Number.parseInt(bookID))).limit(1); 
+  return await db.select().from(bookTable).where(eq(bookTable.id, Number.parseInt(bookID))).limit(1);
 });
