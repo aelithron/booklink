@@ -6,16 +6,38 @@ import db from "@/db/db";
 import { bookTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import fancyBG from "../fancyBG.module.css"
-
-export const metadata: Metadata = {
-  title: "View Book",
+import Image from "next/image";
+import { cache } from "react";
+ 
+export async function generateMetadata({ params }: { params: Promise<{ bookid: string }> }): Promise<Metadata> {
+  const bookData = await loadBook((await params).bookid);
+  if (bookData.length === 0) return { title: "View Book" }
+  const book = bookData[0];
+  return {
+    title: book.name,
+    description: `View information on "${book.name}" by ${book.author}, put together by BookLink (an aesthetic, ethical way to link to books).`,
+    openGraph: {
+      title: book.name,
+      description: `View information on "${book.name}" by ${book.author}, put together by BookLink (an aesthetic, ethical way to link to books).`,
+      siteName: "BookLink",
+      locale: "en_US",
+      type: "book",
+      images: [
+        {
+          url: `${process.env.OPENGRAPH_ROOT}/api/imageproxy?id=${book.googleBooksID}`,
+          width: 400,
+          height: 640
+        }
+      ]
+    }
+  }
 }
 
 export default async function Page({ params }: { params: Promise<{ bookid: string }> }) {
-  const bookData = await db.select().from(bookTable).where(eq(bookTable.id, Number.parseInt((await params).bookid))).limit(1);
+  const bookData = await loadBook((await params).bookid);
   if (bookData.length === 0) {
     return (
-      <div className="flex flex-col p-8 md:p-20 items-center gap-2">
+      <div className="flex flex-col min-h-screen p-8 md:p-20 items-center gap-2">
         <h1 className="text-3xl font-semibold">Not Found</h1>
         <p>The book you searched for couldn&apos;t be found!</p>
 
@@ -30,22 +52,29 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
     <main className={`grid grid-cols-1 md:grid-cols-2 min-h-screen p-8 md:p-20 gap-4 ${fancyBG.bodyBG}`}>
       <div className="flex flex-col gap-2 items-center text-center">
         <h1 className="font-semibold text-2xl">Book Info</h1>
-        <img alt="Book cover" src={`/api/imageproxy?id=${book.googleBooksID}`} width={400} height={640} />
+        <Image alt="Book cover" src={`/api/imageproxy?id=${book.googleBooksID}`} width={400} height={640} />
         <p className="font-semibold text-xl">{book.name}</p>
         <p>Description: Coming Soon</p>
         <p className="text-slate-500">ISBN: {book.isbn}</p>
       </div>
       <div className="flex flex-col gap-4 text-xl">
+        <h3 className="text-lg font-semibold">Bookstores</h3>
         {book.isbn ?
           <a href={`https://bookshop.org/book/${book.isbn}`} target="_blank" className="bg-gradient-to-br from-violet-400 to-blue-400 dark:from-violet-600 dark:to-blue-600 border-slate-300 dark:border-slate-700 border-2 text-center p-2 rounded-2xl font-semibold"><FontAwesomeIcon icon={faStar} /> Open on Bookshop.org</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Bookshop.org</p>
         }
-        <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
         {book.isbn ?
           <a href={`https://www.barnesandnoble.com/w/isbn?ean=${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open at Barnes & Noble</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available at Barnes & Noble</p>
         }
         <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
+        <h3 className="text-lg font-semibold">Libraries</h3>
+        {book.isbn ?
+          <a href={`https://openlibrary.org/isbn/${book.isbn}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on the Open Library</a> :
+          <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Open Library</p>
+        }
+        <hr className="h-px bg-slate-300 border-0 dark:bg-slate-700" />
+        <h3 className="text-lg font-semibold">Big Companies :(</h3>
         {book.googleBooksID ?
           <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl">Open on Google Books</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Google Books</p>
@@ -55,3 +84,7 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
     </main>
   );
 }
+
+const loadBook = cache(async (bookID: string) => {
+  return await db.select().from(bookTable).where(eq(bookTable.id, Number.parseInt(bookID))).limit(1); 
+});

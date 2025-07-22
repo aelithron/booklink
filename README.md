@@ -28,3 +28,4 @@ In your installation method, add the following environment variables:
 - `GOOGLE_BOOKS_KEY`: An API key for Google Books.
 - `DATABASE_URL`: A PostgreSQL connection string in the format of `postgres://<user>:<password>@<host>:<port>/<database>`.
 (more info to come soon)
+- `OPENGRAPH_ROOT`: The root of your domain, which is used for metadata, in the format of `https://<domain>.<tld>` (no trailing slash). You can also add a subdomain if applicable.
