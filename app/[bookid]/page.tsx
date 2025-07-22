@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import fancyBG from "../fancyBG.module.css"
 import Image from "next/image";
 import { cache } from "react";
+import DescriptionModule from "./description.module";
 
 export async function generateMetadata({ params }: { params: Promise<{ bookid: string }> }): Promise<Metadata> {
   const bookData = await loadBook((await params).bookid);
@@ -57,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
       <div className="flex flex-col gap-4 text-xl">
         <div className="text-center items-center">
           <p className="font-semibold text-2xl">{book.name}</p>
-          <p>Description: Coming Soon</p>
+          <DescriptionModule desc={book.description || ""} />
         </div>
         <h3 className="text-lg font-semibold">Bookstores</h3>
         {book.isbn ?
@@ -81,7 +82,10 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Google Books</p>
         }
         <a href={book.isbn ? `https://www.amazon.com/s?k=${book.isbn}&i=stripbooks` : `https://www.amazon.com/s?k=${book.name}&i=stripbooks`} target="_blank" className="bg-gray-500 border-gray-700 dark:text-gray-300 text-gray-700 border-2 text-center p-2 rounded-2xl">Open on Amazon</a>
-        <p className="text-slate-800 dark:text-slate-400 mt-4 text-center text-sm">ISBN: {book.isbn}</p>
+        <div className="text-sm text-center text-slate-800 dark:text-slate-400">
+          <p>ISBN: {book.isbn}</p>
+          <p>(data provided by Google Books)</p>
+        </div>
       </div>
     </main>
   );

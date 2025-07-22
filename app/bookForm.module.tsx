@@ -41,15 +41,20 @@ function AutocompleteForm({ bookSearch }: { bookSearch: string }): ReactNode {
   }
   useEffect(() => {
     if (!bookSearch || bookSearch === "") return;
-    fetch(`${window.location.origin}/api/autocomplete`, { method: "POST", body: JSON.stringify({ search: bookSearch }) })
-      .then((res) => res.json())
-      .then((jsonRes) => {
-        setBookData(jsonRes ?
-          jsonRes.filter((book: AutoCompletedBook, index: number, self: AutoCompletedBook[]) =>
-            index === self.findIndex((b) => b.id === book.id)
-          ) : []
-        );
-      });
+    const timeout = setTimeout(() => {
+      fetch(`${window.location.origin}/api/autocomplete`, {
+        method: "POST",
+        body: JSON.stringify({ search: bookSearch }),
+      })
+        .then((res) => res.json())
+        .then((jsonRes) => {
+          setBookData(
+            jsonRes ? jsonRes.filter(
+              (book: AutoCompletedBook, index: number, self: AutoCompletedBook[]) => index === self.findIndex((b) => b.id === book.id)
+            ) : []);
+        });
+    }, 750);
+    return () => clearTimeout(timeout);
   }, [bookSearch]);
   if (!bookSearch || bookSearch === "") return;
   if (!bookData || bookData.length < 1) return <p className="flex flex-col p-2 bg-slate-500 border-2 mt-4 rounded-xl border-slate-700">Loading...</p>

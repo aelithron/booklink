@@ -21,7 +21,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       await db.delete(bookTable).where(eq(bookTable.googleBooksID, body.id));
     }
   }
-  const rawAPIRequest = await fetch(`https://www.googleapis.com/books/v1/volumes/${body.id}?key=${process.env.GOOGLE_BOOKS_KEY}&fields=id,kind,volumeInfo/title,volumeInfo/authors,volumeInfo/imageLinks,volumeInfo/industryIdentifiers`);
+  const rawAPIRequest = await fetch(`https://www.googleapis.com/books/v1/volumes/${body.id}?key=${process.env.GOOGLE_BOOKS_KEY}&fields=id,kind,volumeInfo/title,volumeInfo/authors,volumeInfo/description,volumeInfo/imageLinks,volumeInfo/industryIdentifiers`);
   if (!rawAPIRequest || !rawAPIRequest.status.toString().startsWith('2')) return NextResponse.json({ error: "server_fetch_error", message: "Couldn't contact the Google Books API!" }, { status: 500 });
   const book = await rawAPIRequest.json();
   if (book.kind !== "books#volume") return NextResponse.json({ error: "invalid_book", message: "Provided id was for a non-volume resource!" }, { status: 400 });
@@ -36,12 +36,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     name: book.volumeInfo.title,
     googleBooksID: body.id,
     author: authors,
+    description: stripHTMLTags(book.volumeInfo.description),
     isbn: isbns.isbn13,
     openLibraryID: openLibraryID
   }).execute();
   return NextResponse.json({ id: (await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1))[0].id });
 }
 
+function stripHTMLTags(html: string): string {
+  return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+}
 function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string}> | undefined) {
   if (!industryIdentifiers || industryIdentifiers.length === 0) {
     return { isbn10: null, isbn13: null };

@@ -5,6 +5,7 @@ export const bookTable = pgTable("books", {
   createdAt: date().notNull().defaultNow(),
   name: text().notNull(),
   author: text().notNull(),
+  description: text(),
   isbn: varchar({ length: 13 }),
   googleBooksID: text(),
   openLibraryID: text()
