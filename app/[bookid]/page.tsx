@@ -81,6 +81,10 @@ export default async function Page({ params }: { params: Promise<{ bookid: strin
           <a href={`https://play.google.com/store/books/details?id=${book.googleBooksID}`} target="_blank" className="bg-gray-500 border-gray-700 dark:text-gray-300 text-gray-700 border-2 text-center p-2 rounded-2xl">Open on Google Books</a> :
           <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Google Books</p>
         }
+        {book.isbn ?
+          <a href={`https://goto.applebooks.apple/${book.isbn}`} target="_blank" className="bg-gray-500 border-gray-700 dark:text-gray-300 text-gray-700 border-2 text-center p-2 rounded-2xl">Open on Apple Books</a> :
+          <p className="bg-slate-500 border-slate-700 border-2 text-center p-2 rounded-2xl text-slate-800 dark:text-slate-400">Not available on Apple Books</p>
+        }
         <a href={book.isbn ? `https://www.amazon.com/s?k=${book.isbn}&i=stripbooks` : `https://www.amazon.com/s?k=${book.name}&i=stripbooks`} target="_blank" className="bg-gray-500 border-gray-700 dark:text-gray-300 text-gray-700 border-2 text-center p-2 rounded-2xl">Open on Amazon</a>
         <div className="text-sm text-center text-slate-800 dark:text-slate-400">
           <p>ISBN: {book.isbn}</p>

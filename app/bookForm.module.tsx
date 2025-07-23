@@ -1,14 +1,15 @@
 "use client";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
 export default function BookForm() {
-  const [book, setBook] = useState<string>("");
+  const searchParams = useSearchParams();
+  const [book, setBook] = useState<string>(searchParams.get("search") || "");
   return (
     <div className="flex flex-col items-center">
-      <label className="text-sm font-semibold mb-1">Book title or ISBN:</label>
+      <label className="text-md font-semibold mb-1">Enter a book title:</label>
       <div className="items-center space-x-2">
         <FontAwesomeIcon icon={faMagnifyingGlass} />
         <input value={book} onChange={(e) => setBook(e.target.value)} placeholder="Search..." className="bg-slate-500 border-2 border-slate-700 rounded-lg px-2 py-1" />
