@@ -10,3 +10,12 @@ export const bookTable = pgTable("books", {
   googleBooksID: text(),
   openLibraryID: text()
 });
+
+export const trendingTable = pgTable("trending", {
+  googleBooksID: text().primaryKey(),
+  name: text().notNull(),
+  author: text().notNull(),
+  description: text(),
+  cover: text(),
+  cacheTime: date().notNull().defaultNow()
+});

@@ -3,6 +3,7 @@ import BookForm from "./bookForm.module";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook } from "@fortawesome/free-solid-svg-icons";
 import fancyBG from "./fancyBG.module.css";
+import Trending from "./trending.module";
 
 export const metadata: Metadata = {
   title: "BookLink",
@@ -17,6 +18,7 @@ export default function Home() {
       </div>
       <p className="mb-4 italic">An aesthetically-pleasing tool for ethically linking to books</p>
       <BookForm />
+      <Trending />
     </div>
   );
 }
