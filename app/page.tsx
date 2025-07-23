@@ -18,7 +18,11 @@ export default function Home() {
       </div>
       <p className="mb-4 italic">An aesthetically-pleasing tool for ethically linking to books</p>
       <BookForm />
+      <h1 className="text-2xl font-semibold mt-8">Trending Books</h1>
       <Trending />
+      <a href="https://developer.nytimes.com" className="flex flex-col mt-4 justify-center items-center text-center">
+        <img src="https://developer.nytimes.com/files/poweredby_nytimes_200c.png" alt="Data from the New York Times" />
+      </a>
     </div>
   );
 }

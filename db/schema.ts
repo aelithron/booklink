@@ -12,7 +12,6 @@ export const bookTable = pgTable("books", {
 });
 
 export const trendingTable = pgTable("trending", {
-  googleBooksID: text().primaryKey(),
   name: text().notNull(),
   author: text().notNull(),
   description: text(),
