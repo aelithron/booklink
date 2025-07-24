@@ -18,11 +18,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if ((new Date().getTime() - new Date(dbCheckPreExisting[0].createdAt).getTime()) / (1000 * 60 * 60 * 24) <= 14) {
       return NextResponse.json({ id: dbCheckPreExisting[0].id });
     } else {
-      await db.delete(bookTable).where(eq(bookTable.googleBooksID, body.id));
+      // decided to not purge the db of old things, since it broke something
+      // await db.delete(bookTable).where(eq(bookTable.googleBooksID, body.id));
     }
   }
   const rawAPIRequest = await fetch(`https://www.googleapis.com/books/v1/volumes/${body.id}?key=${process.env.GOOGLE_BOOKS_KEY}&fields=id,kind,volumeInfo/title,volumeInfo/authors,volumeInfo/description,volumeInfo/imageLinks,volumeInfo/industryIdentifiers`);
-  if (!rawAPIRequest || !rawAPIRequest.status.toString().startsWith('2')) return NextResponse.json({ error: "server_fetch_error", message: "Couldn't contact the Google Books API!" }, { status: 500 });
+  if (!rawAPIRequest || !rawAPIRequest.ok) return NextResponse.json({ error: "server_fetch_error", message: "Couldn't contact the Google Books API!" }, { status: 500 });
   const book = await rawAPIRequest.json();
   if (book.kind !== "books#volume") return NextResponse.json({ error: "invalid_book", message: "Provided id was for a non-volume resource!" }, { status: 400 });
   let authors: string;
