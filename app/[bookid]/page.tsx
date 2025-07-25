@@ -11,6 +11,8 @@ import { cache } from "react";
 import DescriptionModule from "./description.module";
 import { CopyButton } from "./copyButton.module";
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: { params: Promise<{ bookid: string }> }): Promise<Metadata> {
   const bookData = await loadBook((await params).bookid);
   if (bookData.length === 0) return { title: "View Book" }

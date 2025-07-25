@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const placeholderCover = (await fetch("https://bookstoreromanceday.org/wp-content/uploads/2020/08/book-cover-placeholder.png")).body;
   const id = req.nextUrl.searchParams.get("id");

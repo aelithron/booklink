@@ -1,6 +1,8 @@
 import { AutoCompletedBook } from "@/app/bookForm.module";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
   if (!body) return NextResponse.json({ error: "missing_body", message: "The request doesn't have a body!" }, { status: 400 });

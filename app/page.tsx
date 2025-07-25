@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: "BookLink",
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   return (
     <div className={`flex flex-col text-center min-h-screen p-8 md:p-20 ${fancyBG.bodyBG}`}>
@@ -42,7 +44,7 @@ async function getTrendingBooks(): Promise<TrendingBook[]> {
     dbCheckCache = await db.select().from(trendingTable);
   } catch (e) {
     console.warn("Error connecting to db:", e);
-    alert("Error connecting to the database!");
+    return [];
   }
   if (dbCheckCache && dbCheckCache.length >= 1) {
     if ((new Date().getTime() - new Date(dbCheckCache[0].cacheTime).getTime()) / (1000 * 60 * 60 * 24) <= 1) {
@@ -53,7 +55,10 @@ async function getTrendingBooks(): Promise<TrendingBook[]> {
     }
   }
   const res = await fetch(`https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json?api-key=${process.env.NYT_KEY}`);
-  if (!res || !res.ok) alert("Couldn't contact the New York Times API!");
+  if (!res || !res.ok) {
+    console.warn("Couldn't contact the New York Times API!");
+    return [];
+  }
   const data = await res.json();
   const trendingBooks = data.results.books;
   for (const book of trendingBooks) {
