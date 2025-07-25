@@ -54,14 +54,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # copy my little start script (for migrating the database)
 COPY --from=builder --chown=nextjs:nodejs /app/docker-start.sh ./
-COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./ 
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.prod.ts ./ 
 
 USER nextjs
 
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-LABEL org.opencontainers.image.source="https://github.com/aelithron/visiorganize"
+LABEL org.opencontainers.image.source="https://github.com/aelithron/booklink"
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
