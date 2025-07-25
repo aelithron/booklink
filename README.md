@@ -26,6 +26,7 @@ You'll need a PostgreSQL database to run this app.
 In your installation method, add the following environment variables:
 - `NEXT_PUBLIC_DMCA_EMAIL`: An email address for people to send DMCA complaints, as required by Google Books to use their API.
 - `GOOGLE_BOOKS_KEY`: An API key for Google Books (not an OAuth token). You can get one from Google Cloud at [this Google Cloud link](https://console.cloud.google.com/apis/credentials) (you may need to create a project in the Google Cloud interface).
+- `GOOGLE_BOOKS_LANG`: The language of books in searches, as a two-letter ISO-639-1 code (such as `"en"` or `"fr"`). Defaults to English (`"en"`) if not included.
 - `NYT_KEY`: An API key for the New York Times (not the secret). This needs access to the Books API and can be created at https://developer.nytimes.com.
 - `DATABASE_URL`: A PostgreSQL connection string in the format of `postgres://<user>:<password>@<host>:<port>/<database>`.
 (more info to come soon)
@@ -41,6 +42,7 @@ services:
     environment:
       NEXT_PUBLIC_DMCA_EMAIL: ""
       GOOGLE_BOOKS_KEY: ""
+      GOOGLE_BOOKS_LANG: ""
       NYT_KEY: ""
       DATABASE_URL: ""
       OPENGRAPH_ROOT: ""
