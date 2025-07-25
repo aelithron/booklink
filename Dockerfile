@@ -55,6 +55,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # copy my little start script (for migrating the database)
 COPY --from=builder --chown=nextjs:nodejs /app/docker-start.sh ./
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.prod.ts ./ 
+RUN npm install drizzle-kit
 
 USER nextjs
 
