@@ -49,7 +49,12 @@ services:
     ports:
       - 3000:3000
 ```
+3. There have been some issues with database migration! If you happen to get one in your console, or if the app errors with missing tables, do the following:
+  - Clone the source code (this GitHub repo) to your computer
+  - Create a file called `.env` containing `DATABASE_URL="postgres://<user>:<password>@<host>:<port>/<database>"`, filling in the blanks.
+  - Open a terminal and run the commands `npm install` and `npx drizzle-kit push`. You should be good now, and this should be a one time thing.
 ## Screenshot
+![IMG](https://hc-cdn.hel1.your-objectstorage.com/s/v3/de633b3f36e4e4d50e56e563dfee88cc61a10eae_booklink_showcase.png)
 ## Extra Notes
 - Hit any roadblocks in setting up or using this app? Feel free to DM @aelithron on Discord, and I may be able to help :3
 - I hope to move to the Open Library API in the future (currently it is used in a part of the backend for getting Open Library IDs), as it's slightly hypocritical to take such an anti-big-company stance and then use a Google API. However, that API is the definition of spaghetti code and I didn't want to spend ten years debugging.
