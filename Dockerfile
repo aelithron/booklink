@@ -52,6 +52,9 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# copy my little start script
+COPY --from=builder --chown=nextjs:nodejs /app/docker-start.sh ./
+
 USER nextjs
 
 EXPOSE 3000
@@ -61,4 +64,4 @@ LABEL org.opencontainers.image.source="https://github.com/aelithron/visiorganize
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD ["../docker-start.sh"]
+CMD ["/bin/sh", "./docker-start.sh"]
