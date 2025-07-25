@@ -14,7 +14,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.3",
     "next": "15.3.5",
     "pg": "^8.16.3",

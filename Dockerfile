@@ -52,8 +52,9 @@ RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# copy my little start script
+# copy my little start script (for migrating the database)
 COPY --from=builder --chown=nextjs:nodejs /app/docker-start.sh ./
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle.config.ts ./ 
 
 USER nextjs
 
