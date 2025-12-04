@@ -22,7 +22,7 @@ This is a Next.JS based website for doing just that.
 This app is quite easy-to-use! Just go to [booklnk.me](https://booklnk.me) and type in the name of a book. It will create a page with all of the book's information, as well as links to buy it. The shortlink it gives you can be easily shared to others, allowing for a convienent, aesthetic, and ethical way to share books!
 ### Self-hosting
 You'll need a PostgreSQL database to run this app.
-1. Environment Variables
+1. Environment Variables \
 In your installation method, add the following environment variables:
 - `NEXT_PUBLIC_DMCA_EMAIL`: An email address for people to send DMCA complaints, as required by Google Books to use their API.
 - `GOOGLE_BOOKS_KEY`: An API key for Google Books (not an OAuth token). You can get one from Google Cloud at [this Google Cloud link](https://console.cloud.google.com/apis/credentials) (you may need to create a project in the Google Cloud interface).
