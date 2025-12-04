@@ -16,7 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.3",
-    "next": "15.4.7",
+    "next": "15.4.8",
     "pg": "^8.16.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
