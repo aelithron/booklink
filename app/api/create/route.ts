@@ -2,13 +2,14 @@ import db from "@/db/db";
 import { bookTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import sanitizeHtml from "sanitize-html";
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
   if (!body) return NextResponse.json({ error: "missing_body", message: "The request doesn't have a body!" }, { status: 400 });
-  if (!body.id || (body.id as string).trim().length < 1) return NextResponse.json({ error: "missing_id", message: "Missing or invalid Google Books id!" }, { status: 400 });
+  if (!body.id || (body.id as string).trim().length < 1 || !/^[a-zA-Z0-9_-]+$/.test(body.id as string)) return NextResponse.json({ error: "missing_id", message: "Missing or invalid Google Books id!" }, { status: 400 });
   let dbCheckPreExisting;
   try {
     dbCheckPreExisting = await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1);
@@ -39,16 +40,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     name: book.volumeInfo.title,
     googleBooksID: body.id,
     author: authors,
-    description: stripHTMLTags(book.volumeInfo.description),
+    description: sanitizeHtml(book.volumeInfo.description),
     isbn: isbns.isbn13,
     openLibraryID: openLibraryID
   }).execute();
   return NextResponse.json({ id: (await db.select().from(bookTable).where(eq(bookTable.googleBooksID, body.id)).limit(1))[0].id });
 }
 
-function stripHTMLTags(html: string): string {
-  return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
-}
 function parseISBNs(industryIdentifiers: Array<{type: string, identifier: string}> | undefined) {
   if (!industryIdentifiers || industryIdentifiers.length === 0) {
     return { isbn10: null, isbn13: null };

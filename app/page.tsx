@@ -6,6 +6,7 @@ import fancyBG from "./fancyBG.module.css";
 import db from "@/db/db";
 import { trendingTable } from "@/db/schema";
 import { Trending } from "./trending.module";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "BookLink",
@@ -25,7 +26,7 @@ export default async function Home() {
       <h1 className="text-2xl font-semibold mt-8">Bestselling Books</h1>
       <Trending books={JSON.stringify(await getTrendingBooks())} />
       <a href="https://developer.nytimes.com" className="flex flex-col mt-4 justify-center items-center text-center" target="_blank">
-        <img src="https://developer.nytimes.com/files/poweredby_nytimes_200c.png" alt="Data from the New York Times" />
+        <Image src="https://developer.nytimes.com/files/poweredby_nytimes_200c.png" width={200} height={40} alt="Data from the New York Times" />
       </a>
     </div>
   );

@@ -63,7 +63,8 @@ function AutocompleteForm({ bookSearch }: { bookSearch: string }): ReactNode {
     <div className="flex flex-col p-2 bg-slate-500 border-2 mt-4 rounded-xl border-slate-700">
       {bookData.map((book) => <div key={book.id}>
         <button onClick={() => selectBook(book.id)} className="grid grid-cols-5 p-1 items-center w-[80vw] md:w-[40vw]">
-          <img src={book.cover} width={60} height={200} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={book.cover} width={60} height={200} alt="Book Cover" />
           <div className="col-span-4 flex flex-col">
             <h2 className="text-lg font-semibold">{truncateTitle(book.title)}</h2>
             <h3>{book.author}</h3>

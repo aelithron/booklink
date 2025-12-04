@@ -7,7 +7,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const id = req.nextUrl.searchParams.get("id");
   if (!id || id.trim().length < 1) return new NextResponse(placeholderCover, { status: 400 });
   const rawAPIRequest = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.GOOGLE_BOOKS_KEY}&fields=kind,volumeInfo/imageLinks`);
-  if (!rawAPIRequest || !rawAPIRequest.ok) return new NextResponse(placeholderCover, { status: 500 });
+  if (!rawAPIRequest || !rawAPIRequest.ok || !/^[a-zA-Z0-9_-]+$/.test(id)) return new NextResponse(placeholderCover, { status: 500 });
   const book = await rawAPIRequest.json();
   const coverURL = getCoverURL(book.volumeInfo.imageLinks);
   let cover;
